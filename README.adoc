@@ -44,22 +44,17 @@ ifndef::backend-manpage[]
 
 == How to install *bash_unit*
 
-=== installing on Debian/Ubuntu
-
-*bash_unit* deb package is available in the https://github.com/pgrange/bash-unit_deb/releases[bash-unit_deb repo]. You may install it with the following commands:
-
-```bash
-curl https://pgrange.github.io/bash-unit_deb/keys.asc | sudo apt-key add -
-echo deb https://pgrange.github.io/bash-unit_deb/debian/ unstable/ | sudo tee -a /etc/apt/sources.list.d/bash-unit.list
-sudo apt update
-sudo apt install bash-unit
-```
-
 === installing on Archlinux
 
 *bash_unit* package is available on Archlinux through AUR. In order to install, issue the following command :
 
     yaourt -Sys bash_unit
+
+=== installing via link:https://nixos.org/[Nix/NixOS]
+
+*bash_unit* package has been added to link:https://github.com/nixos/nixpkgs[nixpkgs]. You can use it with the following command:
+
+    nix-shell -p bash_unit
 
 === other installation
 
@@ -528,6 +523,13 @@ hello world
 *fake* is also limited by the fact that it defines a _bash_ function to
 override the actual command. In some context the command can not be
 overriden by a function. For instance if your code under test relies on _exec_ to launch _ps_, *fake* will have no effect.
+
+*fake* may also imply strange behaviors from bash_unit when you try to
+fake really basic stuff. bash_unit tries to be as much immune to this as
+possible but there are some limits. Especially and as surprising as it
+might seem, bash allows creating functions named after builtin commands
+and bash_unit won't resist that kind of situation. So, for instance, do
+not try to fake: `exit`; `local`; `trap`; `eval`; `export`; `if`; `then`; `else`; `fi`; `while`; `do`; `done`; `$`; `echo`; `[` (I know, this is not a builtin but don't).
 
 === *fake* parameters
 
